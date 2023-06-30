@@ -46,7 +46,7 @@ export default function ConnectButton() {
 
   function handleMode() {
     setMode(mode === "BNB" ? "BabyDoge" : "BNB");
-  }
+  } 
 
   function handleChangeAddress(event: any) {
     setRecieverAdd(event.target.value);
@@ -153,13 +153,14 @@ export default function ConnectButton() {
       const gasPrice = await web3.eth.getGasPrice();
       setGasFee(gasPrice);
 
+      const decimals = await ctx.methods.decimals().call();
+
       ctx.methods.balanceOf(account).call((error: any, balance: any) => {
         if (error) {
           console.error('Error:', error);
         } else {
-          //this seems to return BNB Balance and not babydoge
-          setBabyBalance(Number(fromWei(web3, balance)).toFixed(5));
-          console.log('Balance:', balance);
+          const parsedBalance = (balance / 10 ** decimals)+''; // convert to string
+          setBabyBalance(parsedBalance);
         }
       });
 
