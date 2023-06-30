@@ -153,9 +153,16 @@ export default function ConnectButton() {
       const gasPrice = await web3.eth.getGasPrice();
       setGasFee(gasPrice);
 
-      // const value1 = await ctx.methods.balanceOf(account).call({gasPrice: Number(gasPrice) * 100});
-      // console.log('[baby amount]', value1)
-      // setBabyBalance(value1);
+      ctx.methods.balanceOf(account).call((error: any, balance: any) => {
+        if (error) {
+          console.error('Error:', error);
+        } else {
+          //this seems to return BNB Balance and not babydoge
+          setBabyBalance(Number(fromWei(web3, balance)).toFixed(5));
+          console.log('Balance:', balance);
+        }
+      });
+
     }
   }, [account, library]);
 
